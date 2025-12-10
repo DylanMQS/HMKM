@@ -1,0 +1,50 @@
+_BASE_: "Base_OVCOCO_R50_1x.yaml"
+MODEL:
+  WEIGHTS: "models/CoDet_OVCOCO_R50_1x.pth"
+  WITH_CAPTION: True
+  SYNC_CAPTION_BATCH: True
+  ROI_BOX_HEAD:
+    ADD_IMAGE_BOX: True
+    USE_ZEROSHOT_CLS: True
+    ZEROSHOT_WEIGHT_PATH: 'datasets/metadata/cococap_clip_a+cname.npy'
+    DETECTION_WEIGHT_PATH: 'datasets/metadata/coco_clip_a+cname_mask.npy'
+    IMAGE_LABEL_LOSS: 'concept_grouping'
+    ADD_FEATURE_TO_PROP: True
+    WS_NUM_PROPS: 32
+    USE_TEXT_GUIDANCE: True
+    PROTOTYPE_WEIGHT_PATH: 'exemplar_prototype/coco/coco_ins10_.pth' # 'bbox_prototype/ovcoco_prototype_1x1.pth'
+    ATTRIBUTE_VISUAL_WEIGHT_PATH: 'exemplar_prototype/coco/coco_ins100_attribute_kmeans15_.pth'
+    CONCEPT_PANDA_COMBINE_WEIGHT: [0.25, 0.0] # 同时使用prototype和attribute特征的加权系数    
+    X_NORM_TEMPERATURE: 15.0 # 进行region-region的计算时，对特征x的正则温度
+    CATEGORIES_INFO_PATH: 'datasets/metadata/coco_ov_categories_info.json'
+SOLVER:
+  USE_CUSTOM_SOLVER: True
+  CUSTOM_MULTIPLIER: 0.1
+  CUSTOM_MULTIPLIER_NAME: ['fc1', 'fc2']
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.02
+  STEPS: (60000, 80000)
+  MAX_ITER: 90000
+DATASETS:
+  TRAIN: ("coco_zeroshot_train_oriorder", "coco_caption_train_tags_634")
+  TEST: ("coco_generalized_del_val",) # ("coco_generalized_zeroshot_val",)
+INPUT:
+  CUSTOM_AUG: ResizeShortestEdge
+  MIN_SIZE_TRAIN_SAMPLING: range
+  MIN_SIZE_TRAIN: (800, 800)
+DATALOADER:
+  SAMPLER_TRAIN: "MultiDatasetConceptSampler"
+  DATASET_RATIO: [1, 4]
+  USE_DIFF_BS_SIZE: True
+  DATASET_BS: [2, 8]
+  USE_RFS: [False, False]
+  DATASET_MIN_SIZES: [[800, 800], [400, 400]]
+  DATASET_MAX_SIZES: [1333, 667]
+  FILTER_EMPTY_ANNOTATIONS: False
+  MULTI_DATASET_GROUPING: True
+  DATASET_ANN: ['box', 'captiontag']
+  NUM_WORKERS: 8
+  CONCEPT_GROUP_SIZE: 2
+WITH_IMAGE_LABELS: True
+SEED: 10528394
+SAVE_FEATURES: 'no'

@@ -1,7 +1,7 @@
 # HMKM
 The official implementation of Hierarchical Multimodal Knowledge Matching for Training-Free Open-Vocabulary Object Detection.
 
-<p align="center"> <img src='assets/HMKM.png' align="center" height="200px"> </p>
+<p align="center"> <img src='assets/HMKM.png' align="center" height="400px"> </p>
 
 
 ## Installation

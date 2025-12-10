@@ -1,0 +1,9 @@
+_BASE_: "CoDet_OVCOCO_R50_1x.yaml"
+MODEL:
+  ROI_BOX_HEAD:
+    ZEROSHOT_WEIGHT_PATH: 'datasets/metadata/cc3m_clip_a+cname.npy'
+    DETECTION_WEIGHT_PATH: 'datasets/metadata/pascal_clip_a+cname.npy'
+    PROTOTYPE_WEIGHT_PATH: 'exemplar_prototype/coco/coco_ins10_.pth' # 'bbox_prototype/ovcoco_prototype_1x1.pth'
+    ATTRIBUTE_VISUAL_WEIGHT_PATH: 'exemplar_prototype/coco/coco_ins100_attribute_kmeans15_.pth'
+DATASETS:
+  TEST: ("voc_2007_test",)
